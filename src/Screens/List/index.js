@@ -42,7 +42,7 @@ function ListScreen({navigation}) {
           })}
         </List>
       </Content>
-      <FloatingButton style={{ bottom: 100, marginLeft: '60%' }} addItem={handleAddItem} />
+      <FloatingButton style={{ bottom: 100, marginLeft: '65%' }} addItem={handleAddItem} />
     </Container>
   )
 }

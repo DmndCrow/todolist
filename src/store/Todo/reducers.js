@@ -1,4 +1,4 @@
-import { TODO_LIST_GET_DETAILS, TODO_LIST_SET_DETAILS, TODO_LIST_RESET } from '../types'
+import {TODO_LIST_GET_DETAILS, TODO_LIST_SET_DETAILS, TODO_LIST_RESET, TODO_LIST_ADD_ITEM} from '../types'
 
 const initialState = {
   items: []
@@ -6,6 +6,16 @@ const initialState = {
 
 export const todoReducer = (state = initialState, action) => {
   switch (action.type) {
+
+    case TODO_LIST_ADD_ITEM: {
+      return {
+        ...state,
+        items: [...state.items, {
+          name: action.payload.name,
+          description: action.payload.description
+        }]
+      }
+    }
 
     case TODO_LIST_GET_DETAILS: {
       return state
@@ -15,11 +25,11 @@ export const todoReducer = (state = initialState, action) => {
       return {
         ...state,
         items: [
-          {name: 'First', text: 'This is First note'},
-          {name: 'Second', text: 'This is Second note'},
-          {name: 'Third', text: 'This is Third note'},
-          {name: 'Fourth', text: 'This is Fourth note'},
-          {name: 'Fifth', text: 'This is Fifth note'},
+          {name: 'First', description: 'This is First note'},
+          {name: 'Second', description: 'This is Second note'},
+          {name: 'Third', description: 'This is Third note'},
+          {name: 'Fourth', description: 'This is Fourth note'},
+          {name: 'Fifth', description: 'This is Fifth note'},
         ]
       }
     }

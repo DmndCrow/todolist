@@ -4,17 +4,17 @@ import { Container, Textarea } from 'native-base'
 function DetailsScreen({ route, navigation }) {
 
   const params = route.params
-  const [text, setText] = React.useState('')
+  const [description, setDescription] = React.useState('')
 
   React.useEffect(() => {
     navigation.setOptions({title: params.item.name})
 
-    setText(params.item.text)
+    setDescription(params.item.description)
   }, [])
 
   return (
     <Container>
-      <Textarea value={text} onChange={message => setText(message.nativeEvent.text)}/>
+      <Textarea value={description} onChange={message => setDescription(message.nativeEvent.text)}/>
     </Container>
   );
 }

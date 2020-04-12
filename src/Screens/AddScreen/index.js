@@ -1,11 +1,15 @@
 import React from 'react'
 import { Container, Textarea } from 'native-base'
 import { TextInput, Button } from 'react-native'
+import { useDispatch } from 'react-redux'
 
 import Panel from './panel'
 import SaveButton from '../../Components/SaveButton'
+import { todoListAddItem } from '../../store/Todo/actions'
 
 function AddScreen({ route, navigation }){
+
+  const dispatch = useDispatch()
 
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
@@ -29,12 +33,13 @@ function AddScreen({ route, navigation }){
   }, [name, description])
 
   const saveItem = () => {
-    console.log(name, description)
+    let temp = description.split('\n')
     if (name.length === 0){
-      let temp = description.split('\n')
       setName(temp[0])
     }
-
+    dispatch(todoListAddItem({
+      name: name.length === 0 ? temp[0] : name, description: description
+    }))
   }
 
   return (
