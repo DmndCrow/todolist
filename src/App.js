@@ -18,6 +18,7 @@ import {configureStore} from './store'
 
 import ListScreen from './Screens/List'
 import DetailsScreen from './Screens/Details'
+import AddScreen from './Screens/AddScreen'
 
 const TodoStack = createStackNavigator()
 const {store, persistor} = configureStore()
@@ -29,6 +30,7 @@ const App: () => React$Node = () => {
         <NavigationContainer>
           <TodoStack.Navigator initialRouteName={'Home'}>
             <TodoStack.Screen name={'Home'} component={ListScreen} />
+            <TodoStack.Screen name={'Add'} component={AddScreen} />
             <TodoStack.Screen name={'Details'} component={DetailsScreen} />
           </TodoStack.Navigator>
         </NavigationContainer>
