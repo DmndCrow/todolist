@@ -20,6 +20,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import {Provider as StoreProvider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
 import {configureStore} from './store'
+import PushNotification from 'react-native-push-notification'
 
 import CurrentListScreen from './Screens/CurrentList'
 import CompletedListScreen from './Screens/CompletedList'
@@ -33,6 +34,28 @@ const Tab = createBottomTabNavigator()
 const {store, persistor} = configureStore()
 
 console.disableYellowBox = true
+
+PushNotification.configure({
+  onRegister: function (token) {
+    console.log('TOKEN:', token)
+  },
+
+  // (required) Called when a remote or local notification is opened or received
+  onNotification: function (notification) {
+    console.log('NOTIFICATION:', notification)
+
+  },
+
+
+  permissions: {
+    alert: true,
+    badge: true,
+    sound: true,
+  },
+
+  popInitialNotification: true,
+  requestPermissions: true,
+})
 
 
 function HomeTabs() {

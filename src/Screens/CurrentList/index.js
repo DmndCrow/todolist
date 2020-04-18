@@ -52,7 +52,6 @@ function CurrentListScreen({navigation}) {
   }
 
   const completeTodo = (index) => {
-    console.log(index)
     dispatch(todoListChangeCurrentCompleted(index))
   }
 

@@ -1,7 +1,6 @@
 import React from 'react'
-import {View, Text, StyleSheet, Animated} from 'react-native'
-import {Button} from 'native-base'
-
+import { View, Text, StyleSheet } from 'react-native'
+import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 

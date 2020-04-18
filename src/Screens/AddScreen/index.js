@@ -1,12 +1,14 @@
 import React from 'react'
-import {Container, Textarea} from 'native-base'
-import {View, TextInput, StyleSheet} from 'react-native'
-import {useDispatch} from 'react-redux'
+import { Container, Textarea } from 'native-base'
+import { View, TextInput, StyleSheet } from 'react-native'
+import { useDispatch } from 'react-redux'
+import PushNotification from 'react-native-push-notification'
 
 import { constants } from '../../config/constants'
 import SaveButton from '../../Components/SaveButton'
-import {todoListAddItem} from '../../store/Todo/actions'
+import { todoListAddItem } from '../../store/Todo/actions'
 import DateView from '../../Components/DateView'
+import {sendNotification} from '../../config/functions'
 
 function AddScreen({route, navigation}) {
 
@@ -41,6 +43,7 @@ function AddScreen({route, navigation}) {
     dispatch(todoListAddItem({
       title: name.length === 0 ? temp[0] : name, description: description,
     }))
+    // sendNotification(name.length === 0 ? temp[0] : name, new Date(Date.now() + 4 * 1000))
     navigation.navigate('Home')
   }
 
