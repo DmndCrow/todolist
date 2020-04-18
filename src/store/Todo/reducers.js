@@ -8,6 +8,7 @@ import {
   TODO_LIST_DELETE_COMPLETED_ITEM,
   TODO_LIST_DELETE_DAILY_ITEM
 } from '../types'
+import moment from 'moment'
 
 const initialState = {
   current: [],
@@ -23,6 +24,7 @@ export const todoReducer = (state = initialState, action) => {
         ...state,
         current: [{
           title: action.payload.title,
+          date: action.payload.date,
           description: action.payload.description
         }, ...state.current]
       }
@@ -75,9 +77,9 @@ export const todoReducer = (state = initialState, action) => {
       return {
         ...state,
         current: [
-          {id: 1, title: 'Жоба жасау', description: 'React Native көмегімен қосымша жасау'},
-          {id: 2, title: 'Сыйлық сатып алу', description: 'This is Second note'},
-          {id: 3, title: 'Android Studio қосымшасын жүктеу', description: 'This is Third note'},
+          {id: 1, title: 'Жоба жасау', description: 'React Native көмегімен қосымша жасау', date: moment([2020, 5, 5])},
+          {id: 2, title: 'Сыйлық сатып алу', description: 'This is Second note', date: moment([2020, 10, 7])},
+          {id: 3, title: 'Android Studio қосымшасын жүктеу', description: 'This is Third note', date: moment([2020, 6, 5])},
         ],
         completed: [
 

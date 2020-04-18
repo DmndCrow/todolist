@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 function Item({item, time, func}) {
 
+
   return (
     <Button style={styles.row} onPress={() => func(item)}>
       <View style={styles.timeline}>

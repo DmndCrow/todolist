@@ -2,6 +2,7 @@ import React from 'react'
 import {Container, Textarea} from 'native-base'
 import {View, ImageBackground, StyleSheet} from 'react-native'
 import {useDispatch} from 'react-redux'
+import BackgroundTimer from 'react-native-background-timer'
 
 import {constants} from '../../config/constants'
 
@@ -13,7 +14,7 @@ import DateView from '../../Components/DateView'
 import Input from '../../Components/Input'
 
 import noteImage from '../../assets/img/note.png'
-import todoImage from '../../assets/img/todo.jpg'
+import moment from 'moment'
 
 function AddScreen({route, navigation}) {
 
@@ -39,19 +40,29 @@ function AddScreen({route, navigation}) {
         headerRight: () => undefined,
       })
     }
-  }, [name, description])
+  }, [name, description, date])
 
   const saveItem = () => {
     let temp = description.split('\n')
     if (name.length === 0) {
       setName(temp[0])
     }
+
     dispatch(todoListAddItem({
-      title: name.length === 0 ? temp[0] : name, description: description, date: date
+      title: name.length === 0 ? temp[0] : name, description: description, date: date,
     }))
+
     sendNotification(name.length === 0 ? temp[0] : name, date)
+
+    // Incorrect work, need to fix
+    BackgroundTimer.setTimeout(() => {
+      console.log('got at ' + new Date())
+    }, Math.abs(date.getDate() - new Date().getDate()))
+
+
     navigation.navigate('Home')
   }
+
 
   return (
     <Container>
@@ -69,7 +80,7 @@ function AddScreen({route, navigation}) {
               clearTextOnFocus={true}
             />
           </View>
-          <DateView date={date} setDate={setDate} />
+          <DateView date={date} setDate={setDate}/>
         </View>
 
 
@@ -86,7 +97,7 @@ function AddScreen({route, navigation}) {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   inputContainer: {
     justifyContent: 'center',

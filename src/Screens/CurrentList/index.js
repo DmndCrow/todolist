@@ -67,8 +67,8 @@ function CurrentListScreen({navigation}) {
       <Title title={constants.title.current + ' - ' + items.length} />
       <ImageBackground source={todoImage} style={styles.backgroundImage}>
 
-        {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
-        {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
+        <Button onPress={() => update()}><Text>Update</Text></Button>
+        <Button onPress={() => reset()}><Text>Reset</Text></Button>
 
         <FlatList
           data={items}
@@ -84,7 +84,7 @@ function CurrentListScreen({navigation}) {
                   func={openItem}
                   key={item.id}
                   item={{...item}}
-                  time={moment().startOf('hour').fromNow()}
+                  time={moment(item.date).from(new Date())}
                 />
               )}
               renderLeftView={() => (
