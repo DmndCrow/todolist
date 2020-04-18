@@ -1,13 +1,14 @@
 import React from 'react'
-import { Container, Textarea } from 'native-base'
-import { TextInput, Button } from 'react-native'
-import { useDispatch } from 'react-redux'
+import {Container, Textarea} from 'native-base'
+import {View, TextInput, StyleSheet} from 'react-native'
+import {useDispatch} from 'react-redux'
 
-import Panel from './panel'
+import { constants } from '../../config/constants'
 import SaveButton from '../../Components/SaveButton'
-import { todoListAddItem } from '../../store/Todo/actions'
+import {todoListAddItem} from '../../store/Todo/actions'
+import DateView from '../../Components/DateView'
 
-function AddScreen({ route, navigation }){
+function AddScreen({route, navigation}) {
 
   const dispatch = useDispatch()
 
@@ -15,41 +16,48 @@ function AddScreen({ route, navigation }){
   const [description, setDescription] = React.useState('')
 
   React.useEffect(() => {
-    navigation.setOptions({title: ''})
+    navigation.setOptions({ headerShown: true, title: constants.title.newItem })
   }, [])
 
   React.useEffect(() => {
-    if (name.length || description.length){
+    if (name.length || description.length) {
       navigation.setOptions({
         headerRight: () => (
-          <SaveButton saveItem={saveItem} style={{ marginRight: 10 }} />
-        )
-      });
-    }else{
+          <SaveButton saveItem={saveItem} style={{marginRight: 10}}/>
+        ),
+      })
+    } else {
       navigation.setOptions({
-        headerRight: () => undefined
-      });
+        headerRight: () => undefined,
+      })
     }
   }, [name, description])
 
   const saveItem = () => {
     let temp = description.split('\n')
-    if (name.length === 0){
+    if (name.length === 0) {
       setName(temp[0])
     }
     dispatch(todoListAddItem({
-      name: name.length === 0 ? temp[0] : name, description: description
+      title: name.length === 0 ? temp[0] : name, description: description,
     }))
+    navigation.navigate('Home')
   }
 
   return (
     <Container>
-      <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        placeholder={'Enter item name'}
-        onChangeText={text => setName(text)}
-        value={name}
-      />
+      <View style={styles.header}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+            placeholder={'Enter item name'}
+            onChangeText={text => setName(text)}
+            value={name}
+          />
+        </View>
+        <DateView />
+      </View>
+
 
       <Textarea
         value={description}
@@ -61,7 +69,21 @@ function AddScreen({ route, navigation }){
 
 
     </Container>
-  );
+  )
 }
 
-export default AddScreen;
+const styles = StyleSheet.create({
+  inputContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 5,
+  },
+})
+
+export default AddScreen
+

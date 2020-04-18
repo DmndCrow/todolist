@@ -7,7 +7,7 @@ function DetailsScreen({ route, navigation }) {
   const [description, setDescription] = React.useState('')
 
   React.useEffect(() => {
-    navigation.setOptions({title: params.item.name})
+    navigation.setOptions({ headerShown: true, title: params.item.title })
 
     setDescription(params.item.description)
   }, [])

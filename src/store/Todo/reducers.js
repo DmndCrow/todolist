@@ -1,7 +1,16 @@
-import {TODO_LIST_GET_DETAILS, TODO_LIST_SET_DETAILS, TODO_LIST_RESET, TODO_LIST_ADD_ITEM} from '../types'
+import {
+  TODO_LIST_GET_DETAILS,
+  TODO_LIST_SET_DETAILS,
+  TODO_LIST_RESET,
+  TODO_LIST_ADD_ITEM,
+  TODO_LIST_DELETE_ITEM,
+  TODO_LIST_CHANGE_CURRENT_COMPLETED
+} from '../types'
 
 const initialState = {
-  items: []
+  current: [],
+  completed: [],
+  everyDay: []
 }
 
 export const todoReducer = (state = initialState, action) => {
@@ -10,10 +19,31 @@ export const todoReducer = (state = initialState, action) => {
     case TODO_LIST_ADD_ITEM: {
       return {
         ...state,
-        items: [...state.items, {
-          name: action.payload.name,
+        current: [{
+          title: action.payload.title,
           description: action.payload.description
-        }]
+        }, ...state.current]
+      }
+    }
+
+    case TODO_LIST_DELETE_ITEM: {
+      let temp = state.current
+      temp.splice(action.payload, 1)
+      return {
+        ...state,
+        current: temp
+      }
+    }
+
+    case TODO_LIST_CHANGE_CURRENT_COMPLETED: {
+      let item = state.current[action.payload]
+      let temp = state.current
+      temp.splice(action.payload, 1)
+
+      return {
+        ...state,
+        current: temp,
+        completed: [item, ...state.completed]
       }
     }
 
@@ -24,12 +54,16 @@ export const todoReducer = (state = initialState, action) => {
     case TODO_LIST_SET_DETAILS: {
       return {
         ...state,
-        items: [
-          {name: 'First', description: 'This is First note'},
-          {name: 'Second', description: 'This is Second note'},
-          {name: 'Third', description: 'This is Third note'},
-          {name: 'Fourth', description: 'This is Fourth note'},
-          {name: 'Fifth', description: 'This is Fifth note'},
+        current: [
+          {id: 1, title: 'Жоба жасау', description: 'React Native көмегімен қосымша жасау'},
+          {id: 2, title: 'Сыйлық сатып алу', description: 'This is Second note'},
+          {id: 3, title: 'Android Studio қосымшасын жүктеу', description: 'This is Third note'},
+        ],
+        completed: [
+
+        ],
+        everyDay: [
+
         ]
       }
     }
