@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Item from '../../Components/Item'
 import {
-  todoListReset, todoListUpdate, todoListDelete, todoListChangeCurrentCompleted
+  todoListReset, todoListUpdate, todoListCurrentDelete, todoListChangeCurrentCompleted
 } from '../../store/Todo/actions'
 import FloatingButton from '../../Components/FloatingButton'
 import todoImage from '../../assets/img/todo.jpg'
@@ -48,7 +48,7 @@ function CurrentListScreen({navigation}) {
   }
 
   const deleteActiveTodo = (index) => {
-    dispatch(todoListDelete(index))
+    dispatch(todoListCurrentDelete(index))
   }
 
   const completeTodo = (index) => {
@@ -64,11 +64,11 @@ function CurrentListScreen({navigation}) {
 
   return (
     <Container>
-      <Title title={constants.title.current} />
+      <Title title={constants.title.current + ' - ' + items.length} />
       <ImageBackground source={todoImage} style={styles.backgroundImage}>
 
-        <Button onPress={() => update()}><Text>Update</Text></Button>
-        <Button onPress={() => reset()}><Text>Reset</Text></Button>
+        {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
+        {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
 
         <FlatList
           data={items}

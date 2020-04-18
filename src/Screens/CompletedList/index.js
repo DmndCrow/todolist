@@ -8,7 +8,7 @@ import moment from 'moment'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Item from '../../Components/Item'
-import { todoListReset, todoListUpdate } from '../../store/Todo/actions'
+import {todoListCompletedDelete, todoListReset, todoListUpdate} from '../../store/Todo/actions'
 import FloatingButton from '../../Components/FloatingButton'
 import todoImage from '../../assets/img/todo.jpg'
 import Title from '../../Components/Title'
@@ -46,7 +46,13 @@ function CompletedListScreen({navigation}) {
   }
 
   const deleteActiveTodo = (index) => {
-    console.log(items[index])
+    dispatch(todoListCompletedDelete(index))
+  }
+
+  const openItem = (item) => {
+    navigation.navigate('Details', {
+      item: item
+    })
   }
 
 
@@ -69,6 +75,7 @@ function CompletedListScreen({navigation}) {
               renderVisibleContent={() => (
                 <Item
                   key={index}
+                  func={openItem}
                   item={{...item}}
                   time={moment().startOf('hour').fromNow()}
                 />

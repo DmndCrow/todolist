@@ -24,7 +24,7 @@ import PushNotification from 'react-native-push-notification'
 
 import CurrentListScreen from './Screens/CurrentList'
 import CompletedListScreen from './Screens/CompletedList'
-import EveryDayListScreen from './Screens/EveryDayList'
+import DailyListScreen from './Screens/Daily'
 
 import DetailsScreen from './Screens/Details'
 import AddScreen from './Screens/AddScreen'
@@ -87,7 +87,7 @@ function HomeTabs() {
     }}>
       <Tab.Screen name={'Current'} component={CurrentListScreen}/>
       <Tab.Screen name={'Completed'} component={CompletedListScreen}/>
-      <Tab.Screen name={'EveryDay'} component={EveryDayListScreen}/>
+      <Tab.Screen name={'EveryDay'} component={DailyListScreen}/>
     </Tab.Navigator>
   )
 }

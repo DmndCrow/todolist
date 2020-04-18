@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.9.0",
+    "@react-native-community/datetimepicker": "^2.3.2",
     "@react-native-community/masked-view": "^0.1.7",
     "@react-navigation/bottom-tabs": "^5.2.6",
     "@react-navigation/compat": "^5.1.7",
     "@react-navigation/drawer": "^5.4.0",
     "@react-navigation/native": "^5.1.4",
     "@react-navigation/stack": "^5.2.9",
+    "add": "^2.0.6",
     "moment": "^2.24.0",
     "native-base": "^2.13.12",
     "react": "16.11.0",
@@ -33,7 +35,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "yarn": "^1.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

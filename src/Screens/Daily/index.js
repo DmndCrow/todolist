@@ -8,7 +8,7 @@ import moment from 'moment'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Item from '../../Components/Item'
-import { todoListReset, todoListUpdate } from '../../store/Todo/actions'
+import {todoListDailyDelete, todoListReset, todoListUpdate} from '../../store/Todo/actions'
 import FloatingButton from '../../Components/FloatingButton'
 import todoImage from '../../assets/img/todo.jpg'
 import Title from '../../Components/Title'
@@ -16,7 +16,7 @@ import Title from '../../Components/Title'
 import { constants } from '../../config/constants'
 
 
-function EveryDayListScreen({navigation}) {
+function DailyListScreen({navigation}) {
 
   const dispatch = useDispatch()
   const redux = useSelector(state => state.todo)
@@ -28,7 +28,7 @@ function EveryDayListScreen({navigation}) {
 
 
   React.useEffect(() => {
-    setItems(redux.current)
+    setItems(redux.daily)
 
     navigation.setOptions({headerShown: false})
   }, [redux])
@@ -46,7 +46,7 @@ function EveryDayListScreen({navigation}) {
   }
 
   const deleteActiveTodo = (index) => {
-    console.log(items[index])
+    dispatch(todoListDailyDelete(index))
   }
 
   const completeTodo = (index) => {
@@ -56,7 +56,7 @@ function EveryDayListScreen({navigation}) {
 
   return (
     <Container>
-      <Title title={constants.title.everyDay} />
+      <Title title={constants.title.daily} />
       <ImageBackground source={todoImage} style={styles.backgroundImage}>
 
         {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default EveryDayListScreen
+export default DailyListScreen

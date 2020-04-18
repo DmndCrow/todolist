@@ -1,14 +1,19 @@
 import React from 'react'
-import { Container, Textarea } from 'native-base'
-import { View, TextInput, StyleSheet } from 'react-native'
-import { useDispatch } from 'react-redux'
-import PushNotification from 'react-native-push-notification'
+import {Container, Textarea} from 'native-base'
+import {View, ImageBackground, StyleSheet} from 'react-native'
+import {useDispatch} from 'react-redux'
 
-import { constants } from '../../config/constants'
-import SaveButton from '../../Components/SaveButton'
-import { todoListAddItem } from '../../store/Todo/actions'
-import DateView from '../../Components/DateView'
+import {constants} from '../../config/constants'
+
+import {todoListAddItem} from '../../store/Todo/actions'
 import {sendNotification} from '../../config/functions'
+
+import SaveButton from '../../Components/SaveButton'
+import DateView from '../../Components/DateView'
+import Input from '../../Components/Input'
+
+import noteImage from '../../assets/img/note.png'
+import todoImage from '../../assets/img/todo.jpg'
 
 function AddScreen({route, navigation}) {
 
@@ -16,9 +21,10 @@ function AddScreen({route, navigation}) {
 
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [date, setDate] = React.useState(new Date())
 
   React.useEffect(() => {
-    navigation.setOptions({ headerShown: true, title: constants.title.newItem })
+    navigation.setOptions({headerShown: true, title: constants.title.newItem})
   }, [])
 
   React.useEffect(() => {
@@ -41,41 +47,47 @@ function AddScreen({route, navigation}) {
       setName(temp[0])
     }
     dispatch(todoListAddItem({
-      title: name.length === 0 ? temp[0] : name, description: description,
+      title: name.length === 0 ? temp[0] : name, description: description, date: date
     }))
-    // sendNotification(name.length === 0 ? temp[0] : name, new Date(Date.now() + 4 * 1000))
+    sendNotification(name.length === 0 ? temp[0] : name, date)
     navigation.navigate('Home')
   }
 
   return (
     <Container>
-      <View style={styles.header}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-            placeholder={'Enter item name'}
-            onChangeText={text => setName(text)}
-            value={name}
-          />
+      <ImageBackground source={noteImage} style={styles.backgroundImage}>
+        <View style={styles.header}>
+          <View style={styles.inputContainer}>
+            <Input
+              name={name}
+              setName={setName}
+              placeholder={constants.placeholder.inputName}
+              placeholderTextColor={'white'}
+              selectionColor={'#e7d629'}
+              underlineColorAndroid={'transparent'}
+              maxLength={32}
+              clearTextOnFocus={true}
+            />
+          </View>
+          <DateView date={date} setDate={setDate} />
         </View>
-        <DateView />
-      </View>
 
 
-      <Textarea
-        value={description}
-        placeholder={'your description'}
-        onChange={message => setDescription(message.nativeEvent.text)}
-      />
-
-      {/*<Panel style={{ bottom: 0}} />*/}
-
-
+        <Textarea
+          value={description}
+          placeholder={'your description'}
+          onChange={message => setDescription(message.nativeEvent.text)}
+        />
+      </ImageBackground>
     </Container>
   )
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'contain'
+  },
   inputContainer: {
     justifyContent: 'center',
     alignItems: 'center',

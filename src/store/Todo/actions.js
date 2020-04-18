@@ -2,8 +2,10 @@ import {
   TODO_LIST_ADD_ITEM,
   TODO_LIST_RESET,
   TODO_LIST_SET_DETAILS,
-  TODO_LIST_DELETE_ITEM,
-  TODO_LIST_CHANGE_CURRENT_COMPLETED
+  TODO_LIST_DELETE_CURRENT_ITEM,
+  TODO_LIST_CHANGE_CURRENT_COMPLETED,
+  TODO_LIST_DELETE_COMPLETED_ITEM,
+  TODO_LIST_DELETE_DAILY_ITEM,
 } from '../types'
 
 export const todoListUpdate = () => ({
@@ -19,8 +21,18 @@ export const todoListAddItem = (data) => ({
   payload: data
 })
 
-export const todoListDelete = (index) => ({
-  type: TODO_LIST_DELETE_ITEM,
+export const todoListCurrentDelete = (index) => ({
+  type: TODO_LIST_DELETE_CURRENT_ITEM,
+  payload: index
+})
+
+export const todoListCompletedDelete = (index) => ({
+  type: TODO_LIST_DELETE_COMPLETED_ITEM,
+  payload: index
+})
+
+export const todoListDailyDelete = (index) => ({
+  type: TODO_LIST_DELETE_DAILY_ITEM,
   payload: index
 })
 

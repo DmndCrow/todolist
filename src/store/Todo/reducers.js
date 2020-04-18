@@ -3,14 +3,16 @@ import {
   TODO_LIST_SET_DETAILS,
   TODO_LIST_RESET,
   TODO_LIST_ADD_ITEM,
-  TODO_LIST_DELETE_ITEM,
-  TODO_LIST_CHANGE_CURRENT_COMPLETED
+  TODO_LIST_DELETE_CURRENT_ITEM,
+  TODO_LIST_CHANGE_CURRENT_COMPLETED,
+  TODO_LIST_DELETE_COMPLETED_ITEM,
+  TODO_LIST_DELETE_DAILY_ITEM
 } from '../types'
 
 const initialState = {
   current: [],
   completed: [],
-  everyDay: []
+  daily: []
 }
 
 export const todoReducer = (state = initialState, action) => {
@@ -26,12 +28,30 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
-    case TODO_LIST_DELETE_ITEM: {
+    case TODO_LIST_DELETE_CURRENT_ITEM: {
       let temp = state.current
       temp.splice(action.payload, 1)
       return {
         ...state,
         current: temp
+      }
+    }
+
+    case TODO_LIST_DELETE_COMPLETED_ITEM: {
+      let temp = state.completed
+      temp.splice(action.payload, 1)
+      return {
+        ...state,
+        completed: temp
+      }
+    }
+
+    case TODO_LIST_DELETE_DAILY_ITEM: {
+      let temp = state.daily
+      temp.splice(action.payload, 1)
+      return {
+        ...state,
+        daily: temp
       }
     }
 
@@ -62,7 +82,7 @@ export const todoReducer = (state = initialState, action) => {
         completed: [
 
         ],
-        everyDay: [
+        daily: [
 
         ]
       }
