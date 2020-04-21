@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, FlatList, ImageBackground, View, Dimensions } from 'react-native'
-import { Container, Button, Text } from 'native-base'
+import { Container } from 'native-base'
 import { useSelector, useDispatch } from 'react-redux'
 import SwipeView from 'react-native-swipeview'
 import moment from 'moment'
@@ -12,6 +12,7 @@ import {
   todoListReset, todoListUpdate,
   todoListCurrentDelete, todoListChangeCurrentCompletedByIndex
 } from '../../store/Todo/actions'
+
 import FloatingButton from '../../Components/FloatingButton'
 import todoImage from '../../assets/img/todo.jpg'
 import Title from '../../Components/Title'
@@ -29,33 +30,39 @@ function CurrentListScreen({navigation}) {
 
   const [items, setItems] = React.useState([])
 
-
+  // run after each redux store update
   React.useEffect(() => {
-    setItems(redux.current)
+    setItems(redux.current) // get todo tasks from redux store
 
-    navigation.setOptions({ headerShown: false })
+    navigation.setOptions({ headerShown: false }) // remove header
   }, [redux])
 
+  // run function from redux actions that loads initial data for testing
   const update = () => {
     dispatch(todoListUpdate())
   }
 
+  // run function from redux actions that removes all data from redux store
   const reset = () => {
     dispatch(todoListReset())
   }
 
+  // navigate to 'Add' route
   const handleAddItem = () => {
     navigation.navigate('Add')
   }
 
+  // remove item from redux store
   const deleteActiveTodo = (index) => {
     dispatch(todoListCurrentDelete(index))
   }
 
+  // move item from current to completed array in redux store
   const completeTodo = (index) => {
     dispatch(todoListChangeCurrentCompletedByIndex(index))
   }
 
+  // navifate to details of a certain todo task with route props
   const openItem = (item) => {
     navigation.navigate('Details', {
       item: item
@@ -65,21 +72,22 @@ function CurrentListScreen({navigation}) {
 
   return (
     <Container>
+      {/* title of the route at the top of the screen */}
       <Title title={constants.title.current + ' - ' + items.length} />
       <ImageBackground source={todoImage} style={styles.backgroundImage}>
 
-        <Button onPress={() => update()}><Text>Update</Text></Button>
-        <Button onPress={() => reset()}><Text>Reset</Text></Button>
+        {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
+        {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
 
         <FlatList
           data={items}
           keyExtractor={todo => todo.id}
           enableEmptySections={true}
           ItemSeparatorComponent={() => <View style={styles.separator}/>}
-          onPress={() => console.log(123123123)}
           renderItem={({item, index}) => (
             <SwipeView
               key={item.id}
+              {/* render current tasks from redux current list */}
               renderVisibleContent={() => (
                 <Item
                   func={openItem}
@@ -88,6 +96,7 @@ function CurrentListScreen({navigation}) {
                   time={moment(item.date).from(new Date())}
                 />
               )}
+              {/* on swipe from the left, show icon check */}
               renderLeftView={() => (
                 <View style={styles.rowLeft}>
                   <Icon
@@ -97,6 +106,7 @@ function CurrentListScreen({navigation}) {
                   />
                 </View>
               )}
+              {/* on swipe from the right, show icon x */}
               renderRightView={() => (
                 <View style={styles.rowRight}>
                   <Icon
@@ -110,11 +120,12 @@ function CurrentListScreen({navigation}) {
               rightOpenValue={rightOpenValue}
               swipeDuration={200}
               swipeToOpenPercent={40}
-              onSwipedLeft={() => deleteActiveTodo(index)}
-              onSwipedRight={() => completeTodo(index)}
+              onSwipedLeft={() => deleteActiveTodo(index)} // on swipe from right, remove item
+              onSwipedRight={() => completeTodo(index)} // on swipe from left, move item to completed list
             />
           )}
         />
+        {/* Component that renders + button, to add new task */}
         <FloatingButton style={{bottom: 100, marginLeft: '65%'}} addItem={handleAddItem}/>
       </ImageBackground>
     </Container>

@@ -7,7 +7,7 @@ import {
   TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX,
   TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_TITLE,
   TODO_LIST_DELETE_COMPLETED_ITEM,
-  TODO_LIST_DELETE_DAILY_ITEM,
+  TODO_LIST_DELETE_DAILY_ITEM, TODO_LIST_UPDATE_CURRENT,
 } from '../types'
 
 import moment from 'moment'
@@ -26,20 +26,14 @@ export const todoReducer = (state = initialState, action) => {
     case TODO_LIST_ADD_ITEM: {
       return {
         ...state,
-        current: [{
-          title: action.payload.title,
-          date: action.payload.date,
-          description: action.payload.description,
-          notificationId: action.payload.notificationId,
-          timeoutId: action.payload.timeoutId
-        }, ...state.current]
+        current: [action.payload, ...state.current] // put new task at the top of list
       }
     }
 
     case TODO_LIST_DELETE_CURRENT_ITEM: {
       let temp = state.current
 
-      removeNotication(temp[action.payload])
+      removeNotication(temp[action.payload]) // remove all notifications related to given task
 
       temp.splice(action.payload, 1)
 
@@ -49,6 +43,7 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    // same as above, but for completed list
     case TODO_LIST_DELETE_COMPLETED_ITEM: {
       let temp = state.completed
       temp.splice(action.payload, 1)
@@ -58,6 +53,7 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    // same as above, but for daily list
     case TODO_LIST_DELETE_DAILY_ITEM: {
       let temp = state.daily
       temp.splice(action.payload, 1)
@@ -67,9 +63,13 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    // move form current to completed list, by using index of the task
     case TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX: {
 
       let item = state.current[action.payload]
+
+      removeNotication(item)
+
       let temp = state.current
       temp.splice(action.payload, 1)
 
@@ -80,6 +80,7 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    // same as above, but initially need to find index of the task
     case TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_TITLE: {
 
       let index = state.current.findIndex(p => {
@@ -100,10 +101,23 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    // update current list by removing its initial data
+    // and push update at the top of the list
+    case TODO_LIST_UPDATE_CURRENT: {
+      let temp = state.current
+      temp.splice(action.payload, 1)
+
+      return {
+        ...state,
+        current: [action.payload.item, ...temp]
+      }
+    }
+
     case TODO_LIST_GET_DETAILS: {
       return state
     }
 
+    // random data
     case TODO_LIST_SET_DETAILS: {
       return {
         ...state,
@@ -142,6 +156,7 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    // reset all items
     case TODO_LIST_RESET: {
 
       for (const item in state.current){

@@ -34,8 +34,10 @@ const TodoStack = createStackNavigator()
 const Tab = createBottomTabNavigator()
 const {store, persistor} = configureStore()
 
+// remove warnings
 console.disableYellowBox = true
 
+// add notification config
 PushNotification.configure({
   onRegister: function (token) {
     console.log('TOKEN:', token)
@@ -59,7 +61,7 @@ PushNotification.configure({
 
 
 
-
+// create current, completed and daily tabs
 function HomeTabs() {
   return (
     <Tab.Navigator screenOptions={({route}) => ({
@@ -94,10 +96,14 @@ function HomeTabs() {
   )
 }
 
+// main component of the app that renders everything
 const App: () => React$Node = () => {
   return (
+    // store for redux
     <StoreProvider store={store}>
+      {/* persistor to keep redux data saved even after update */}
       <PersistGate loading={null} persistor={persistor}>
+        {/* create navigation container to move between routes */}
         <NavigationContainer>
           <TodoStack.Navigator
             initialRouteName={'Home'}

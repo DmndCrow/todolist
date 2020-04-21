@@ -13,7 +13,6 @@ import DateView from '../../Components/DateView'
 import Input from '../../Components/Input'
 
 import noteImage from '../../assets/img/note.png'
-import moment from 'moment'
 
 function AddScreen({route, navigation}) {
 
@@ -23,6 +22,7 @@ function AddScreen({route, navigation}) {
   const [description, setDescription] = React.useState('')
   const [date, setDate] = React.useState(new Date())
 
+  // add title from constants
   React.useEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -30,8 +30,10 @@ function AddScreen({route, navigation}) {
     })
   }, [])
 
+  // for every change of react hooks
   React.useEffect(() => {
     if (name.length || description.length) {
+      // add check icon at the top right corner to save new task
       navigation.setOptions({
         headerRight: () => (
           <SaveButton saveItem={saveItem} style={{marginRight: 10}}/>
@@ -47,11 +49,13 @@ function AddScreen({route, navigation}) {
   const saveItem = () => {
     let temp = description.split('\n')
     if (name.length === 0) {
-      setName(temp[0])
+      setName(temp[0]) // if name is not given, take first line of the description
     }
 
+    // send notification at the given time
     const notificationIds = sendNotification(dispatch,name.length === 0 ? temp[0] : name, date)
 
+    // add item to the store
     dispatch(todoListAddItem({
       title: name.length === 0 ? temp[0] : name,
       description: description,
@@ -60,7 +64,7 @@ function AddScreen({route, navigation}) {
       timeoutId: notificationIds.timeoutId
     }))
 
-
+    // navigate to home screen
     navigation.navigate('Home')
   }
 
@@ -70,6 +74,7 @@ function AddScreen({route, navigation}) {
       <ImageBackground source={noteImage} style={styles.backgroundImage}>
         <View style={styles.header}>
           <View style={styles.inputContainer}>
+            {/* input to get task name */}
             <Input
               name={name}
               setName={setName}
@@ -81,10 +86,11 @@ function AddScreen({route, navigation}) {
               clearTextOnFocus={true}
             />
           </View>
+          {/* Date field to know when send notification */}
           <DateView date={date} setDate={setDate}/>
         </View>
 
-
+        {/* description of the task */}
         <Textarea
           value={description}
           placeholder={'your description'}
