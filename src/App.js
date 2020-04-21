@@ -11,7 +11,7 @@ import 'react-native-gesture-handler'
 import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {Text} from 'react-native'
+import {DeviceEventEmitter, Text} from 'react-native'
 
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -21,6 +21,7 @@ import {Provider as StoreProvider} from 'react-redux'
 import {PersistGate} from 'redux-persist/integration/react'
 import {configureStore} from './store'
 import PushNotification from 'react-native-push-notification'
+import PushNotificationAndroid from 'react-native-push-notification'
 
 import CurrentListScreen from './Screens/CurrentList'
 import CompletedListScreen from './Screens/CompletedList'
@@ -55,6 +56,8 @@ PushNotification.configure({
   popInitialNotification: true,
   requestPermissions: true,
 })
+
+
 
 
 function HomeTabs() {

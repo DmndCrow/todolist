@@ -7,7 +7,8 @@ export const TODO_LIST_RESET = 'TODO_LIST_RESET' // reset todo list
 
 
 export const TODO_LIST_DELETE_CURRENT_ITEM = 'TODO_LIST_DELETE_CURRENT_ITEM' // delete item from array 'current'
-export const TODO_LIST_CHANGE_CURRENT_COMPLETED = 'TODO_LIST_CHANGE_CURRENT_COMPLETED' // move item from one list to another
+export const TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX = 'TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX' // move item from one list to another
+export const TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_TITLE = 'TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_TITLE'
 
 export const TODO_LIST_DELETE_COMPLETED_ITEM = 'TODO_LIST_DELETE_COMPLETED_ITEM' // delete item from array 'competed'
 

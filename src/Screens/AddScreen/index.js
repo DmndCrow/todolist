@@ -1,8 +1,7 @@
 import React from 'react'
 import {Container, Textarea} from 'native-base'
 import {View, ImageBackground, StyleSheet} from 'react-native'
-import {useDispatch} from 'react-redux'
-import BackgroundTimer from 'react-native-background-timer'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {constants} from '../../config/constants'
 
@@ -25,7 +24,10 @@ function AddScreen({route, navigation}) {
   const [date, setDate] = React.useState(new Date())
 
   React.useEffect(() => {
-    navigation.setOptions({headerShown: true, title: constants.title.newItem})
+    navigation.setOptions({
+      headerShown: true,
+      title: constants.title.newItem
+    })
   }, [])
 
   React.useEffect(() => {
@@ -48,16 +50,15 @@ function AddScreen({route, navigation}) {
       setName(temp[0])
     }
 
+    const notificationIds = sendNotification(dispatch,name.length === 0 ? temp[0] : name, date)
+
     dispatch(todoListAddItem({
-      title: name.length === 0 ? temp[0] : name, description: description, date: date,
+      title: name.length === 0 ? temp[0] : name,
+      description: description,
+      date: date,
+      notificationId: notificationIds.notificationId,
+      timeoutId: notificationIds.timeoutId
     }))
-
-    sendNotification(name.length === 0 ? temp[0] : name, date)
-
-    // Incorrect work, need to fix
-    BackgroundTimer.setTimeout(() => {
-      console.log('got at ' + new Date())
-    }, Math.abs(date.getDate() - new Date().getDate()))
 
 
     navigation.navigate('Home')

@@ -3,7 +3,8 @@ import {
   TODO_LIST_RESET,
   TODO_LIST_SET_DETAILS,
   TODO_LIST_DELETE_CURRENT_ITEM,
-  TODO_LIST_CHANGE_CURRENT_COMPLETED,
+  TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX,
+  TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_TITLE,
   TODO_LIST_DELETE_COMPLETED_ITEM,
   TODO_LIST_DELETE_DAILY_ITEM,
 } from '../types'
@@ -36,7 +37,12 @@ export const todoListDailyDelete = (index) => ({
   payload: index
 })
 
-export const todoListChangeCurrentCompleted = (index) => ({
-  type: TODO_LIST_CHANGE_CURRENT_COMPLETED,
+export const todoListChangeCurrentCompletedByIndex = (index) => ({
+  type: TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX,
   payload: index
+})
+
+export const todoListChangeCurrentCompletedByTitle = (data) => ({
+  type: TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_TITLE,
+  payload: data
 })

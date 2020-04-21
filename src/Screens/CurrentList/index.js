@@ -9,7 +9,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Item from '../../Components/Item'
 import {
-  todoListReset, todoListUpdate, todoListCurrentDelete, todoListChangeCurrentCompleted
+  todoListReset, todoListUpdate,
+  todoListCurrentDelete, todoListChangeCurrentCompletedByIndex
 } from '../../store/Todo/actions'
 import FloatingButton from '../../Components/FloatingButton'
 import todoImage from '../../assets/img/todo.jpg'
@@ -52,7 +53,7 @@ function CurrentListScreen({navigation}) {
   }
 
   const completeTodo = (index) => {
-    dispatch(todoListChangeCurrentCompleted(index))
+    dispatch(todoListChangeCurrentCompletedByIndex(index))
   }
 
   const openItem = (item) => {
