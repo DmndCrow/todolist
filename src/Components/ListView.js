@@ -9,7 +9,7 @@ function ListView(props){
 
   const leftOpenValue = Dimensions.get('window').width
   const rightOpenValue = -Dimensions.get('window').width
-  const { items, openDetails, deleteAction, completeAction } = props
+  const { items, viewType, openDetails, deleteAction, completeAction } = props
 
   return(
     <FlatList
@@ -24,6 +24,7 @@ function ListView(props){
             // render current tasks from redux current list
             <Item
               func={openDetails}
+              viewType={viewType}
               key={item.id}
               item={{...item}}
               time={item.date}

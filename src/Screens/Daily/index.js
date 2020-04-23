@@ -72,6 +72,7 @@ function DailyListScreen({navigation}) {
         {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
 
         <ListView
+          viewType={'daily'}
           items={items}
           openDetails={openDetails}
           deleteAction={deleteAction}

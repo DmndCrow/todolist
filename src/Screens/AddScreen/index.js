@@ -1,6 +1,7 @@
 import React from 'react'
 import {Container, Textarea} from 'native-base'
 import {View, ImageBackground, StyleSheet} from 'react-native'
+import PushNotification from 'react-native-push-notification'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {constants} from '../../config/constants'
@@ -8,10 +9,12 @@ import {constants} from '../../config/constants'
 import {handleSaveCurrentItem, handleSaveDailyItem} from '../../config/functions'
 
 import SaveButton from '../../Components/SaveButton'
-import DateView from '../../Components/DateView'
+import DateViewCurrent from './DateViewCurrent'
 import Input from '../../Components/Input'
 
 import noteImage from '../../assets/img/note.png'
+import DateViewDaily from './DateViewDaily'
+import {todoListAddDailyItem} from '../../store/Todo/actions'
 
 function AddScreen({route, navigation}) {
 
@@ -56,7 +59,15 @@ function AddScreen({route, navigation}) {
     if (listType === 'current'){
       dispatch(handleSaveCurrentItem(name.length === 0 ? temp[0] : name, date, description))
     }else if (listType === 'daily'){
-      dispatch(handleSaveDailyItem())
+      const notificationIds = dispatch(handleSaveDailyItem(name.length === 0 ? temp[0] : name, date))
+
+      dispatch(todoListAddDailyItem({
+        title: name.length === 0 ? temp[0] : name,
+        date: date,
+        description: description,
+        notificationId: notificationIds.notificationId,
+        timeoutId: notificationIds.timeoutId
+      }))
     }
 
     // navigate to home screen
@@ -82,7 +93,8 @@ function AddScreen({route, navigation}) {
             />
           </View>
           {/* Date field to know when send notification */}
-          <DateView date={date} setDate={setDate}/>
+          {listType === 'current' && <DateViewCurrent date={date} setDate={setDate} />}
+          {listType === 'daily' && <DateViewDaily date={date} setDate={setDate} />}
         </View>
 
         {/* description of the task */}

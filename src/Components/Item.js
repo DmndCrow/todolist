@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 
 
-function Item({item, time, func}) {
+function Item({item, viewType, time, func}) {
 
   return (
     <Button style={styles.row} onPress={() => func(item)}>
@@ -17,9 +17,9 @@ function Item({item, time, func}) {
           size={6}
         />
       </View>
-      <View style={[styles.content, {paddingTop: time ? 10 : 0}]}>
+      <View style={[styles.content, {paddingTop: viewType === 'current' ? 10 : 0}]}>
         <Text style={styles.text}>{item.title}</Text>
-        {time && <Text style={styles.time}>{moment(time).from(new Date())}</Text>}
+        {viewType === 'current' && <Text style={styles.time}>{moment(time).from(new Date())}</Text>}
       </View>
     </Button>
   )

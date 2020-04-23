@@ -58,6 +58,7 @@ function CompletedListScreen({navigation}) {
 
 
         <ListView
+          viewType={'completed'}
           items={items}
           openDetails={openDetails}
           deleteAction={deleteAction}

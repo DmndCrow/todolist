@@ -3,7 +3,7 @@ import {TouchableOpacity, Text, StyleSheet} from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
-function DateView({ date, setDate, setChanged }) {
+function DateViewCurrent({ date, setDate, setChanged }) {
 
   const [mode, setMode] = React.useState('date')
   const [show, setShow] = React.useState(false)
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default DateView
+export default DateViewCurrent

@@ -74,10 +74,11 @@ function CurrentListScreen({navigation}) {
       <Title title={constants.title.current + ' - ' + items.length} />
       <ImageBackground source={todoImage} style={styles.backgroundImage}>
 
-        <Button onPress={() => update()}><Text>Update</Text></Button>
-        <Button onPress={() => reset()}><Text>Reset</Text></Button>
+        {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
+        {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
 
         <ListView
+          viewType={'current'}
           items={items}
           openDetails={openDetails}
           deleteAction={deleteAction}

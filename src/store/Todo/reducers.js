@@ -11,11 +11,13 @@ import {
   TODO_LIST_UPDATE_CURRENT,
   TODO_LIST_UPDATE_COMPLETED,
   TODO_LIST_CHANGE_COMPLETED_CURRENT_BY_INDEX,
+  TODO_LIST_ADD_DAILY_ITEM,
+  TODO_LIST_UPDATE_DAILY,
 } from '../types'
 
 import moment from 'moment'
 
-import {removeNotication} from '../../config/functions'
+import {handleSaveDailyItem, removeNotication} from '../../config/functions'
 
 const initialState = {
   current: [],
@@ -30,6 +32,13 @@ export const todoReducer = (state = initialState, action) => {
       return {
         ...state,
         current: [action.payload, ...state.current] // put new task at the top of list
+      }
+    }
+
+    case TODO_LIST_ADD_DAILY_ITEM: {
+      return {
+        ...state,
+        daily: [action.payload, ...state.daily]
       }
     }
 
@@ -59,6 +68,9 @@ export const todoReducer = (state = initialState, action) => {
     // same as above, but for daily list
     case TODO_LIST_DELETE_DAILY_ITEM: {
       let temp = state.daily
+
+      removeNotication(temp[action.payload])
+
       temp.splice(action.payload, 1)
       return {
         ...state,
@@ -141,6 +153,17 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    case TODO_LIST_UPDATE_DAILY: {
+
+      let temp = state.daily
+      temp.splice(action.payload.index, 1)
+
+      return {
+        ...state,
+        daily: [action.payload.item, ...temp]
+      }
+    }
+
     case TODO_LIST_GET_DETAILS: {
       return state
     }
@@ -187,9 +210,9 @@ export const todoReducer = (state = initialState, action) => {
     // reset all items
     case TODO_LIST_RESET: {
 
-      for (const item in state.current){
-        removeNotication(item)
-      }
+      // for (const item in state.current){
+      //   removeNotication(item)
+      // }
 
       return initialState
     }

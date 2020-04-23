@@ -5,17 +5,18 @@ import {Container, Textarea} from 'native-base'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {constants} from '../../config/constants'
-import {getType, removeNotication, sendNotification} from '../../config/functions'
+import {getType, handleSaveDailyItem, removeNotication, sendNotification} from '../../config/functions'
 
 import noteImage from '../../assets/img/note.png'
 import Input from '../../Components/Input'
-import DateView from '../../Components/DateView'
+import DateViewCurrent from '../AddScreen/DateViewCurrent'
 import SaveButton from '../../Components/SaveButton'
 import {
   todoListChangeCompletedCurrentByIndex,
   todoListUpdateCompleted,
-  todoListUpdateCurrent,
+  todoListUpdateCurrent, todoListUpdateDaily,
 } from '../../store/Todo/actions'
+import DateViewDaily from './DateViewDaily'
 
 
 
@@ -139,7 +140,31 @@ function DetailsScreen({route, navigation}) {
         }))
       }
     }else{
+      const index = redux.daily.findIndex(p => {
+        return p.title === params.item.title && p.date === params.item.date
+      })
 
+      let notificationIds = {
+        notificationId: params.item.notificationId,
+        timeoutId: params.item.timeoutId
+      }
+
+      if (dateChanged){
+        removeNotication(params.item)
+        notificationIds = dispatch(handleSaveDailyItem(name.length === 0 ? temp[0] : name, date))
+      }
+
+      const item = {
+        title: name.length === 0 ? temp[0] : name,
+        description: description,
+        date: date,
+        notificationId: notificationIds.notificationId,
+        timeoutId: notificationIds.notificationId
+      }
+
+      dispatch(todoListUpdateDaily({
+        index: index, item: item
+      }))
     }
 
     navigation.navigate('Home')
@@ -164,7 +189,10 @@ function DetailsScreen({route, navigation}) {
             />
           </View>
           {/* date field to change notification date */}
-          <DateView date={date} setDate={setDate} setChanged={setDateChange}/>
+          {todo.type === 'daily' ?
+            <DateViewCurrent date={date} setDate={setDate} setChanged={setDateChange} /> :
+            <DateViewDaily date={date} setDate={setDate} setChanged={setDateChange} />
+          }
         </View>
 
         {/* text area field to change description */}
