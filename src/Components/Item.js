@@ -2,10 +2,10 @@ import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import moment from 'moment'
 
 
 function Item({item, time, func}) {
-
 
   return (
     <Button style={styles.row} onPress={() => func(item)}>
@@ -17,9 +17,9 @@ function Item({item, time, func}) {
           size={6}
         />
       </View>
-      <View style={styles.content}>
+      <View style={[styles.content, {paddingTop: time ? 10 : 0}]}>
         <Text style={styles.text}>{item.title}</Text>
-        <Text style={styles.time}>{time}</Text>
+        {time && <Text style={styles.time}>{moment(time).from(new Date())}</Text>}
       </View>
     </Button>
   )
@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingRight: 10,
     paddingLeft: 10,
-    paddingTop: 10,
   },
   text: {
     fontSize: 17,

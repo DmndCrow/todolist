@@ -1,8 +1,7 @@
 import React from 'react'
 import {FlatList, View, StyleSheet, Dimensions} from 'react-native'
 import SwipeView from 'react-native-swipeview'
-import Item from '../../Components/Item'
-import moment from 'moment'
+import Item from './Item'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 
@@ -27,7 +26,7 @@ function ListView(props){
               func={openDetails}
               key={item.id}
               item={{...item}}
-              time={moment(item.date).from(new Date())}
+              time={item.date}
             />
           )}
           renderLeftView={() => (

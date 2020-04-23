@@ -1,19 +1,15 @@
 import React from 'react'
-import {StyleSheet, FlatList, ImageBackground, View, Dimensions} from 'react-native'
+import {StyleSheet, FlatList, ImageBackground } from 'react-native'
 import { Container } from 'native-base'
 import { useSelector, useDispatch } from 'react-redux'
-import SwipeView from 'react-native-swipeview'
-import moment from 'moment'
 
-import Icon from 'react-native-vector-icons/FontAwesome'
-
-import Item from '../../Components/Item'
 import {todoListCompletedDelete, todoListReset, todoListUpdate} from '../../store/Todo/actions'
-import FloatingButton from '../../Components/FloatingButton'
 import todoImage from '../../assets/img/todo.jpg'
 import Title from '../../Components/Title'
 
 import { constants } from '../../config/constants'
+import ListView from '../../Components/ListView'
+import moment from 'moment'
 
 
 function CompletedListScreen({navigation}) {
@@ -21,15 +17,11 @@ function CompletedListScreen({navigation}) {
   const dispatch = useDispatch()
   const redux = useSelector(state => state.todo)
 
-  const leftOpenValue = Dimensions.get('window').width
-  const rightOpenValue = -Dimensions.get('window').width
-
   const [items, setItems] = React.useState([])
 
 
   React.useEffect(() => {
     setItems(redux.completed)
-
     navigation.setOptions({headerShown: false})
   }, [redux])
 
@@ -41,15 +33,15 @@ function CompletedListScreen({navigation}) {
     dispatch(todoListReset())
   }
 
-  const handleAddItem = () => {
-    navigation.navigate('Add')
-  }
-
-  const deleteActiveTodo = (index) => {
+  const deleteAction = (index) => {
     dispatch(todoListCompletedDelete(index))
   }
 
-  const openItem = (item) => {
+  const completeAction = (index) => {
+    console.log(index)
+  }
+
+  const openDetails = (item) => {
     navigation.navigate('Details', {
       item: item
     })
@@ -64,50 +56,14 @@ function CompletedListScreen({navigation}) {
         {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
         {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
 
-        <FlatList
-          data={items}
-          keyExtractor={todo => todo.id}
-          enableEmptySections={true}
-          ItemSeparatorComponent={() => <View style={styles.separator}/>}
-          renderItem={({item, index}) => (
-            <SwipeView
-              key={index}
-              renderVisibleContent={() => (
-                <Item
-                  key={index}
-                  func={openItem}
-                  item={{...item}}
-                  time={moment().startOf('hour').fromNow()}
-                />
-              )}
-              renderLeftView={() => (
-                <View style={styles.rowLeft}>
-                  <Icon
-                    style={styles.icon}
-                    name={'check'}
-                    size={20}
-                  />
-                </View>
-              )}
-              renderRightView={() => (
-                <View style={styles.rowRight}>
-                  <Icon
-                    style={styles.icon}
-                    name={'times'}
-                    size={20}
-                  />
-                </View>
-              )}
-              leftOpenValue={leftOpenValue}
-              rightOpenValue={rightOpenValue}
-              swipeDuration={200}
-              swipeToOpenPercent={40}
-              onSwipedRight={() => {
-                deleteActiveTodo(index)
-              }}
-            />
-          )}
+
+        <ListView
+          items={items}
+          openDetails={openDetails}
+          deleteAction={deleteAction}
+          completeAction={completeAction}
         />
+
       </ImageBackground>
     </Container>
   )

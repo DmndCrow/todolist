@@ -1,16 +1,14 @@
 import React from 'react'
-import {StyleSheet, FlatList, ImageBackground, View, Dimensions } from 'react-native'
+import {StyleSheet, ImageBackground } from 'react-native'
+import { Button, Text } from 'native-base'
 import { Container } from 'native-base'
 import { useSelector, useDispatch } from 'react-redux'
-import SwipeView from 'react-native-swipeview'
-import moment from 'moment'
 
-import Icon from 'react-native-vector-icons/FontAwesome'
-
-import Item from '../../Components/Item'
 import {
-  todoListReset, todoListUpdate,
-  todoListCurrentDelete, todoListChangeCurrentCompletedByIndex
+  todoListReset,
+  todoListUpdate,
+  todoListCurrentDelete,
+  todoListChangeCurrentCompletedByIndex
 } from '../../store/Todo/actions'
 
 import FloatingButton from '../../Components/FloatingButton'
@@ -18,7 +16,7 @@ import todoImage from '../../assets/img/todo.jpg'
 import Title from '../../Components/Title'
 
 import { constants } from '../../config/constants'
-import ListView from './ListView'
+import ListView from '../../Components/ListView'
 
 
 function CurrentListScreen({navigation}) {
@@ -47,7 +45,9 @@ function CurrentListScreen({navigation}) {
 
   // navigate to 'Add' route
   const handleAddItem = () => {
-    navigation.navigate('Add')
+    navigation.navigate('Add', {
+      route: 'current'
+    })
   }
 
   // remove item from redux store
@@ -74,8 +74,8 @@ function CurrentListScreen({navigation}) {
       <Title title={constants.title.current + ' - ' + items.length} />
       <ImageBackground source={todoImage} style={styles.backgroundImage}>
 
-        {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
-        {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
+        <Button onPress={() => update()}><Text>Update</Text></Button>
+        <Button onPress={() => reset()}><Text>Reset</Text></Button>
 
         <ListView
           items={items}

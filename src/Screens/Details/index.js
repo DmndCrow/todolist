@@ -11,7 +11,11 @@ import noteImage from '../../assets/img/note.png'
 import Input from '../../Components/Input'
 import DateView from '../../Components/DateView'
 import SaveButton from '../../Components/SaveButton'
-import {todoListUpdateCurrent} from '../../store/Todo/actions'
+import {
+  todoListChangeCompletedCurrentByIndex,
+  todoListUpdateCompleted,
+  todoListUpdateCurrent,
+} from '../../store/Todo/actions'
 
 
 
@@ -22,12 +26,13 @@ function DetailsScreen({route, navigation}) {
   const dispatch = useDispatch()
   const redux = useSelector(state => state.todo)
 
-
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
-  const [date, setDate] = React.useState(new Date())
-
+  const [date, setDate] = React.useState(null)
+  const [dateChanged, setDateChange] = React.useState(false)
   const [todo, setTodo] = React.useState({})
+
+
 
   // run at the beginning
   React.useEffect(() => {
@@ -40,7 +45,8 @@ function DetailsScreen({route, navigation}) {
     // set data from redux store
     setName(params.item.title)
     setDescription(params.item.description)
-    setDate(new Date(params.item.date))
+    setDate(params.item.date ? new Date(params.item.date) : new Date())
+
     setTodo(getType(redux, params.item))
   }, [])
 
@@ -68,20 +74,31 @@ function DetailsScreen({route, navigation}) {
     }
 
     if (todo.type === 'current'){
-      console.log(redux.current[todo.index])
-      // remove all notification of original
-      removeNotication(redux.current[todo.index])
+      let item = {}
+      if (dateChanged){
+        // remove all notification of original
+        removeNotication(redux.current[todo.index])
 
-      // send notification for updated task
-      const notificationIds = sendNotification(dispatch, name.length === 0 ? temp[0] : name, date)
+        // send notification for updated task
+        const notificationIds = sendNotification(dispatch, name.length === 0 ? temp[0] : name, date)
 
-      const item = {
-        title: name.length === 0 ? temp[0] : name,
-        description: description,
-        date: date,
-        notificationId: notificationIds.notificationId,
-        timeoutId: notificationIds.timeoutId
+        item = {
+          title: name.length === 0 ? temp[0] : name,
+          description: description,
+          date: date,
+          notificationId: notificationIds.notificationId,
+          timeoutId: notificationIds.timeoutId
+        }
+      }else{
+        item = {
+          title: name.length === 0 ? temp[0]: name,
+          description: description,
+          date: date,
+          notificationId: params.item.notificationId,
+          timeoutId: params.item.timeoutId
+        }
       }
+
 
       // save task by updating current list
       dispatch(todoListUpdateCurrent({
@@ -89,7 +106,38 @@ function DetailsScreen({route, navigation}) {
       }))
 
     }else if (todo.type === 'completed'){
+      const index = redux.completed.findIndex(p => {
+        return p.title === params.item.title && p.date === params.item.date
+      })
 
+      if (dateChanged){
+        const notificationIds = sendNotification(dispatch, name.length === 0 ? temp[0] : name, date)
+
+        const item = {
+          title: name.length === 0 ? temp[0] : name,
+          description: description,
+          date: date,
+          notificationId: notificationIds.notificationId,
+          timeoutId: notificationIds.timeoutId
+        }
+
+        dispatch(todoListChangeCompletedCurrentByIndex({
+          index: index, item: item
+        }))
+
+      }else{
+        const item = {
+          title: name.length === 0 ? temp[0] : name,
+          description: description,
+          date: null,
+          notificationId: '',
+          timeoutId: -1
+        }
+
+        dispatch(todoListUpdateCompleted({
+          index: index, item: item
+        }))
+      }
     }else{
 
     }
@@ -116,7 +164,7 @@ function DetailsScreen({route, navigation}) {
             />
           </View>
           {/* date field to change notification date */}
-          <DateView date={date} setDate={setDate}/>
+          <DateView date={date} setDate={setDate} setChanged={setDateChange}/>
         </View>
 
         {/* text area field to change description */}

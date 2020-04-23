@@ -8,6 +8,8 @@ import {
   TODO_LIST_DELETE_COMPLETED_ITEM,
   TODO_LIST_DELETE_DAILY_ITEM,
   TODO_LIST_UPDATE_CURRENT,
+  TODO_LIST_UPDATE_COMPLETED,
+  TODO_LIST_CHANGE_COMPLETED_CURRENT_BY_INDEX,
 } from '../types'
 
 // actions.js file is used to call reducer methods from reducers.js based on action type,
@@ -51,7 +53,17 @@ export const todoListChangeCurrentCompletedByTitle = (data) => ({
   payload: data
 })
 
+export const todoListChangeCompletedCurrentByIndex = (data) => ({
+  type: TODO_LIST_CHANGE_COMPLETED_CURRENT_BY_INDEX,
+  payload: data
+})
+
 export const todoListUpdateCurrent = (data) => ({
   type: TODO_LIST_UPDATE_CURRENT,
+  payload: data
+})
+
+export const todoListUpdateCompleted = (data) => ({
+  type: TODO_LIST_UPDATE_COMPLETED,
   payload: data
 })

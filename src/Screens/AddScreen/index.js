@@ -5,8 +5,7 @@ import {useDispatch, useSelector} from 'react-redux'
 
 import {constants} from '../../config/constants'
 
-import {todoListAddItem} from '../../store/Todo/actions'
-import {sendNotification} from '../../config/functions'
+import {handleSaveCurrentItem, handleSaveDailyItem} from '../../config/functions'
 
 import SaveButton from '../../Components/SaveButton'
 import DateView from '../../Components/DateView'
@@ -17,6 +16,8 @@ import noteImage from '../../assets/img/note.png'
 function AddScreen({route, navigation}) {
 
   const dispatch = useDispatch()
+
+  const listType = route.params.route
 
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
@@ -52,17 +53,11 @@ function AddScreen({route, navigation}) {
       setName(temp[0]) // if name is not given, take first line of the description
     }
 
-    // send notification at the given time
-    const notificationIds = sendNotification(dispatch,name.length === 0 ? temp[0] : name, date)
-
-    // add item to the store
-    dispatch(todoListAddItem({
-      title: name.length === 0 ? temp[0] : name,
-      description: description,
-      date: date,
-      notificationId: notificationIds.notificationId,
-      timeoutId: notificationIds.timeoutId
-    }))
+    if (listType === 'current'){
+      dispatch(handleSaveCurrentItem(name.length === 0 ? temp[0] : name, date, description))
+    }else if (listType === 'daily'){
+      dispatch(handleSaveDailyItem())
+    }
 
     // navigate to home screen
     navigation.navigate('Home')

@@ -1,6 +1,9 @@
 import PushNotification from 'react-native-push-notification'
 import BackgroundTimer from 'react-native-background-timer'
-import {todoListChangeCurrentCompletedByTitle} from '../store/Todo/actions'
+import {
+  todoListAddItem,
+  todoListChangeCurrentCompletedByTitle,
+} from '../store/Todo/actions'
 
 export const sendNotification = (dispatch, message, date) => {
 
@@ -56,4 +59,26 @@ export const getType = (data, item) => {
   if (currentIndex !== -1) return {type: 'current', index: currentIndex}
   if (completedIndex !== -1) return {type: 'completed', index: completedIndex}
   if (dailyIndex !== -1) return {type: 'daily', index: dailyIndex}
+}
+
+export const handleSaveCurrentItem = (name, date, description) => {
+  return (dispatch) => {
+    // send notification at the given time
+    const notificationIds = sendNotification(dispatch, name, date)
+
+    // add item to the store
+    dispatch(todoListAddItem({
+      title: name,
+      description: description,
+      date: date,
+      notificationId: notificationIds.notificationId,
+      timeoutId: notificationIds.timeoutId
+    }))
+  }
+}
+
+export const handleSaveDailyItem = (name, date, description) => {
+  return (dispatch) => {
+
+  }
 }

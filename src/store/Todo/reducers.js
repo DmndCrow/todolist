@@ -7,7 +7,10 @@ import {
   TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX,
   TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_TITLE,
   TODO_LIST_DELETE_COMPLETED_ITEM,
-  TODO_LIST_DELETE_DAILY_ITEM, TODO_LIST_UPDATE_CURRENT,
+  TODO_LIST_DELETE_DAILY_ITEM,
+  TODO_LIST_UPDATE_CURRENT,
+  TODO_LIST_UPDATE_COMPLETED,
+  TODO_LIST_CHANGE_COMPLETED_CURRENT_BY_INDEX,
 } from '../types'
 
 import moment from 'moment'
@@ -76,7 +79,10 @@ export const todoReducer = (state = initialState, action) => {
       return {
         ...state,
         current: temp,
-        completed: [item, ...state.completed]
+        completed: [{
+          ...item,
+          date: null
+        }, ...state.completed]
       }
     }
 
@@ -88,6 +94,7 @@ export const todoReducer = (state = initialState, action) => {
       })
 
       let item = index !== -1 ? state.current[index] : null
+      item.date = null
       let temp = state.current
 
       if (index != -1){
@@ -101,15 +108,36 @@ export const todoReducer = (state = initialState, action) => {
       }
     }
 
+    case TODO_LIST_CHANGE_COMPLETED_CURRENT_BY_INDEX: {
+      let temp = state.completed
+      temp.splice(action.payload.index, 1)
+
+      return {
+        ...state,
+        completed: temp,
+        current: [action.payload.item, ...state.completed]
+      }
+    }
+
     // update current list by removing its initial data
     // and push update at the top of the list
     case TODO_LIST_UPDATE_CURRENT: {
       let temp = state.current
-      temp.splice(action.payload, 1)
+      temp.splice(action.payload.index, 1)
 
       return {
         ...state,
         current: [action.payload.item, ...temp]
+      }
+    }
+
+    case TODO_LIST_UPDATE_COMPLETED: {
+      let temp = state.completed
+      temp.splice(action.payload.index, 1)
+
+      return {
+        ...state,
+        completed: [action.payload.item, ...temp]
       }
     }
 

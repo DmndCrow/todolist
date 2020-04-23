@@ -3,7 +3,7 @@ import {TouchableOpacity, Text, StyleSheet} from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from 'moment'
 
-function DateView({ date, setDate }) {
+function DateView({ date, setDate, setChanged }) {
 
   const [mode, setMode] = React.useState('date')
   const [show, setShow] = React.useState(false)
@@ -11,6 +11,10 @@ function DateView({ date, setDate }) {
   const onChange = (event, selectedDate) => {
     setShow(Platform.OS === 'ios')
     let newDate = selectedDate || date
+    console.log(selectedDate)
+    if (selectedDate){
+      setChanged(true)
+    }
     setDate(newDate)
 
     if (mode == 'date') {
