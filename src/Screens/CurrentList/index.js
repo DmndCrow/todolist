@@ -18,15 +18,13 @@ import todoImage from '../../assets/img/todo.jpg'
 import Title from '../../Components/Title'
 
 import { constants } from '../../config/constants'
+import ListView from './ListView'
 
 
 function CurrentListScreen({navigation}) {
 
   const dispatch = useDispatch()
   const redux = useSelector(state => state.todo)
-
-  const leftOpenValue = Dimensions.get('window').width
-  const rightOpenValue = -Dimensions.get('window').width
 
   const [items, setItems] = React.useState([])
 
@@ -53,17 +51,17 @@ function CurrentListScreen({navigation}) {
   }
 
   // remove item from redux store
-  const deleteActiveTodo = (index) => {
+  const deleteAction = (index) => {
     dispatch(todoListCurrentDelete(index))
   }
 
   // move item from current to completed array in redux store
-  const completeTodo = (index) => {
+  const completeAction = (index) => {
     dispatch(todoListChangeCurrentCompletedByIndex(index))
   }
 
-  // navifate to details of a certain todo task with route props
-  const openItem = (item) => {
+  // navifate to details of a certain task with route props
+  const openDetails = (item) => {
     navigation.navigate('Details', {
       item: item
     })
@@ -79,52 +77,13 @@ function CurrentListScreen({navigation}) {
         {/*<Button onPress={() => update()}><Text>Update</Text></Button>*/}
         {/*<Button onPress={() => reset()}><Text>Reset</Text></Button>*/}
 
-        <FlatList
-          data={items}
-          keyExtractor={todo => todo.id}
-          enableEmptySections={true}
-          ItemSeparatorComponent={() => <View style={styles.separator}/>}
-          renderItem={({item, index}) => (
-            <SwipeView
-              key={item.id}
-              {/* render current tasks from redux current list */}
-              renderVisibleContent={() => (
-                <Item
-                  func={openItem}
-                  key={item.id}
-                  item={{...item}}
-                  time={moment(item.date).from(new Date())}
-                />
-              )}
-              {/* on swipe from the left, show icon check */}
-              renderLeftView={() => (
-                <View style={styles.rowLeft}>
-                  <Icon
-                    style={styles.icon}
-                    name={'check'}
-                    size={20}
-                  />
-                </View>
-              )}
-              {/* on swipe from the right, show icon x */}
-              renderRightView={() => (
-                <View style={styles.rowRight}>
-                  <Icon
-                    style={styles.icon}
-                    name={'times'}
-                    size={20}
-                  />
-                </View>
-              )}
-              leftOpenValue={leftOpenValue}
-              rightOpenValue={rightOpenValue}
-              swipeDuration={200}
-              swipeToOpenPercent={40}
-              onSwipedLeft={() => deleteActiveTodo(index)} // on swipe from right, remove item
-              onSwipedRight={() => completeTodo(index)} // on swipe from left, move item to completed list
-            />
-          )}
+        <ListView
+          items={items}
+          openDetails={openDetails}
+          deleteAction={deleteAction}
+          completeAction={completeAction}
         />
+
         {/* Component that renders + button, to add new task */}
         <FloatingButton style={{bottom: 100, marginLeft: '65%'}} addItem={handleAddItem}/>
       </ImageBackground>
@@ -141,32 +100,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover', // or 'stretch'
   },
-  rowLeft: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: 'green',
-  },
-  rowRight: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-    backgroundColor: '#FE4D33',
-  },
-  icon: {
-    color: 'white',
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#182129',
-  },
+
 })
 
 export default CurrentListScreen
