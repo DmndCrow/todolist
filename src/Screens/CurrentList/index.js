@@ -28,6 +28,9 @@ function CurrentListScreen({navigation}) {
 
   // run after each redux store update
   React.useEffect(() => {
+
+    console.log(redux)
+
     setItems(redux.current) // get todo tasks from redux store
 
     navigation.setOptions({ headerShown: false }) // remove header

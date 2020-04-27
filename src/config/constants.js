@@ -11,5 +11,16 @@ export const constants = {
   placeholder: {
     inputName: 'input name',
     inputTextarea: 'input textarea',
+  },
+  dictionary: {
+    create: {
+      todo: 'todo create',
+      daily: 'daily create'
+    },
+    delete: {
+      todo: 'todo delete',
+      daily: 'daily delete'
+    },
+    complete: 'todo complete'
   }
 }

@@ -15,6 +15,7 @@ import Input from '../../Components/Input'
 import noteImage from '../../assets/img/note.png'
 import DateViewDaily from './DateViewDaily'
 import {todoListAddDailyItem} from '../../store/Todo/actions'
+import TimerView from './TimerView'
 
 function AddScreen({route, navigation}) {
 
@@ -26,11 +27,14 @@ function AddScreen({route, navigation}) {
   const [description, setDescription] = React.useState('')
   const [date, setDate] = React.useState(new Date())
 
+  const [timer, setTimer] = React.useState({})
+  const [changedTimer, setChangedTimer] = React.useState(false)
+
   // add title from constants
   React.useEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: constants.title.newItem
+      title: constants.title.newItem,
     })
   }, [])
 
@@ -56,9 +60,9 @@ function AddScreen({route, navigation}) {
       setName(temp[0]) // if name is not given, take first line of the description
     }
 
-    if (listType === 'current'){
+    if (listType === 'current') {
       dispatch(handleSaveCurrentItem(name.length === 0 ? temp[0] : name, date, description))
-    }else if (listType === 'daily'){
+    } else if (listType === 'daily') {
       const notificationIds = dispatch(handleSaveDailyItem(name.length === 0 ? temp[0] : name, date))
 
       dispatch(todoListAddDailyItem({
@@ -66,12 +70,15 @@ function AddScreen({route, navigation}) {
         date: date,
         description: description,
         notificationId: notificationIds.notificationId,
-        timeoutId: notificationIds.timeoutId
+        timeoutId: notificationIds.timeoutId,
       }))
     }
-
     // navigate to home screen
     navigation.navigate('Home')
+  }
+
+  const saveTimer = () => {
+
   }
 
 
@@ -93,10 +100,17 @@ function AddScreen({route, navigation}) {
             />
           </View>
           {/* Date field to know when send notification */}
-          {listType === 'current' && <DateViewCurrent date={date} setDate={setDate} />}
-          {listType === 'daily' && <DateViewDaily date={date} setDate={setDate} />}
-        </View>
+          {/*<View>*/}
+          {/*  {listType === 'current' && <TimerView setChangedTimer={setChangedTimer} setTimer={setTimer} />}*/}
 
+          {/*  {listType === 'current' && <DateViewCurrent date={date} setDate={setDate}/>}*/}
+          {/*  {listType === 'daily' && <DateViewDaily date={date} setDate={setDate}/>}*/}
+          {/*</View>*/}
+
+          {listType === 'current' && <DateViewCurrent date={date} setDate={setDate}/>}
+          {listType === 'daily' && <DateViewDaily date={date} setDate={setDate}/>}
+
+        </View>
         {/* description of the task */}
         <Textarea
           value={description}
@@ -122,6 +136,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 5,
+  },
+  icons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
   },
 })
 

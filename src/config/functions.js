@@ -97,6 +97,14 @@ export const handleSaveDailyItem = (message, date) => {
       notificationId: notificationId,
       timeoutId: null
     }
-
   }
+}
+
+export const pushNewNotification = (message) => {
+  console.log(message)
+
+  PushNotification.localNotificationSchedule({
+    message: message,
+    date: new Date()
+  })
 }

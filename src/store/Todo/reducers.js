@@ -15,34 +15,71 @@ import {
   TODO_LIST_UPDATE_DAILY,
 } from '../types'
 
+import { constants } from '../../config/constants'
+
 import moment from 'moment'
 
-import {handleSaveDailyItem, removeNotication} from '../../config/functions'
+import {handleSaveDailyItem, pushNewNotification, removeNotication} from '../../config/functions'
 
 const initialState = {
   current: [],
+  todoCounter: {
+    create: 0,
+    delete: 0
+  },
   completed: [],
-  daily: []
+  completedCounter: 0,
+  daily: [],
+  dailyCounter: {
+    create: 0,
+    delete: 0
+  },
 }
 
 export const todoReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case TODO_LIST_ADD_ITEM: {
+
+      if ([0, 9, 49, 99, 499].includes(state.todoCounter.create)){
+        let message = (state.todoCounter.create + 1).toString() + ' ' + constants.dictionary.create.todo
+        pushNewNotification(message)
+      }
+
       return {
         ...state,
-        current: [action.payload, ...state.current] // put new task at the top of list
+        current: [action.payload, ...state.current], // put new task at the top of list
+        todoCounter: {
+          ...state.todoCounter,
+          create: state.todoCounter.create + 1
+        }
       }
     }
 
     case TODO_LIST_ADD_DAILY_ITEM: {
+
+      if ([0, 9, 49, 99, 499].includes(state.dailyCounter.create)){
+        let message = (state.dailyCounter.create + 1).toString() + ' ' + constants.dictionary.create.daily
+        pushNewNotification(message)
+      }
+
       return {
         ...state,
-        daily: [action.payload, ...state.daily]
+        daily: [action.payload, ...state.daily],
+        dailyCounter: {
+          ...state.dailyCounter,
+          create: state.dailyCounter.create + 1
+        }
       }
     }
 
     case TODO_LIST_DELETE_CURRENT_ITEM: {
+
+      if ([0, 9, 49, 99, 499].includes(state.todoCounter.delete)){
+        let message = (state.todoCounter.delete + 1).toString() + ' ' + constants.dictionary.delete.todo
+        pushNewNotification(message)
+      }
+
       let temp = state.current
 
       removeNotication(temp[action.payload]) // remove all notifications related to given task
@@ -51,7 +88,11 @@ export const todoReducer = (state = initialState, action) => {
 
       return {
         ...state,
-        current: temp
+        current: temp,
+        todoCounter: {
+          ...state.todoCounter,
+          delete: state.todoCounter.delete + 1
+        }
       }
     }
 
@@ -67,6 +108,12 @@ export const todoReducer = (state = initialState, action) => {
 
     // same as above, but for daily list
     case TODO_LIST_DELETE_DAILY_ITEM: {
+
+      if ([0, 9, 49, 99, 499].includes(state.dailyCounter.delete)){
+        let message = (state.dailyCounter.delete + 1).toString() + ' ' + constants.dictionary.delete.daily
+        pushNewNotification(message)
+      }
+
       let temp = state.daily
 
       removeNotication(temp[action.payload])
@@ -74,12 +121,24 @@ export const todoReducer = (state = initialState, action) => {
       temp.splice(action.payload, 1)
       return {
         ...state,
-        daily: temp
+        daily: temp,
+        dailyCounter: {
+          ...state.dailyCounter,
+          delete: state.dailyCounter.delete + 1
+        }
       }
     }
 
     // move form current to completed list, by using index of the task
     case TODO_LIST_CHANGE_CURRENT_COMPLETED_BY_INDEX: {
+
+      console.log(state.completedCounter)
+
+      if ([0, 9, 49, 99, 499].includes(state.completedCounter)){
+        let message = (state.completedCounter + 1).toString() + ' ' + constants.dictionary.complete
+        pushNewNotification(message)
+      }
+
 
       let item = state.current[action.payload]
 
@@ -94,7 +153,8 @@ export const todoReducer = (state = initialState, action) => {
         completed: [{
           ...item,
           date: null
-        }, ...state.completed]
+        }, ...state.completed],
+        completedCounter: state.completedCounter + 1
       }
     }
 
@@ -109,14 +169,20 @@ export const todoReducer = (state = initialState, action) => {
       item.date = null
       let temp = state.current
 
-      if (index != -1){
+      if (index !== -1){
         temp.splice(action.payload, 1)
+      }
+
+      if ([0, 9, 49, 99, 499].includes(state.completedCounter) && index !== -1){
+        let message = (state.completedCounter + 1).toString() + ' ' + constants.dictionary.complete
+        pushNewNotification(message)
       }
 
       return {
         ...state,
         current: temp,
-        completed: index !== -1 ? [item, ...state.completed] : state.completed
+        completed: index !== -1 ? [item, ...state.completed] : state.completed,
+        completedCounter: index !== -1 ? state.completedCounter + 1 : state.completedCounter
       }
     }
 
