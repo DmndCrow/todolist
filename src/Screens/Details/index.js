@@ -198,7 +198,7 @@ function DetailsScreen({route, navigation}) {
         {/* text area field to change description */}
         <Textarea
           value={description}
-          placeholder={'your description'}
+          placeholder={constants.placeholder.inputTextarea}
           onChange={message => setDescription(message.nativeEvent.text)}
         />
       </ImageBackground>

@@ -1,59 +1,58 @@
-import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import TimePicker from "react-native-24h-timepicker";
+import React, {Component} from 'react'
+import {StyleSheet, View, TouchableOpacity, Text, TextInput} from 'react-native'
 
-class Example extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      hours: 0,
-      minutes: 0
-    };
+function TimerView({ hours, setHours, minutes, setMinutes }) {
 
-    this.onConfirm = this.onConfirm.bind(this)
+  const onChange = (text, type) => {
+    if (type === 'hours'){
+      if (text.match(/^[0-9]+$/)) {
+        let res = Math.min(parseInt(text), 23)
+        setHours(res.toString())
+      }
+      else setHours('')
+    }else{
+      if (text.match(/^[0-9]+$/)){
+        let res = Math.min(parseInt(text), 59)
+        setMinutes(res.toString())
+      }
+      else setMinutes('')
+    }
   }
 
-  onCancel() {
-    this.TimePicker.close();
-  }
+  return (
+    <TouchableOpacity style={styles.container}>
+      <TextInput
+        style={[styles.input, { height: 35, borderColor: 'gray', borderWidth: 0.5 }]}
+        onChangeText={text => onChange(text, 'hours')}
+        value={hours}
+        keyboardType={'phone-pad'}
+        placeholder={'00h'}
+      />
+      <Text> : </Text>
+      <TextInput
+        style={[styles.input, { height: 35, borderColor: 'gray', borderWidth: 0.5 }]}
+        onChangeText={text => onChange(text, 'minutes')}
+        value={minutes}
+        keyboardType={'phone-pad'}
+        placeholder={'00m'}
+      />
+    </TouchableOpacity>
+  )
 
-  onConfirm(hour, minute) {
-    console.log(hour, minute)
-    this.TimePicker.close();
-  }
-
-  render() {
-    return (
-      <TouchableOpacity style={styles.container} onPress={() => this.TimePicker.open()}>
-        <Text style={styles.text}>{this.state.hours}h : {this.state.minutes}m</Text>
-        <TimePicker
-          ref={ref => {
-            this.TimePicker = ref;
-          }}
-          onCancel={() => this.onCancel()}
-          onConfirm={(hour, minute) => this.onConfirm(hour, minute)}
-        />
-      </TouchableOpacity>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row'
   },
-  hour: {
+  input: {
     color: 'black',
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  month: {
-    color: 'black',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '400',
   },
-});
+})
 
-export default Example
+export default TimerView

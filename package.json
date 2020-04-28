@@ -23,7 +23,6 @@
     "native-base": "^2.13.12",
     "react": "16.11.0",
     "react-native": "0.62.1",
-    "react-native-24h-timepicker": "^1.1.0",
     "react-native-action-button": "^2.8.5",
     "react-native-background-timer": "^2.2.0",
     "react-native-gesture-handler": "^1.6.1",

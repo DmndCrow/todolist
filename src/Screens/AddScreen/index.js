@@ -1,12 +1,11 @@
 import React from 'react'
 import {Container, Textarea} from 'native-base'
 import {View, ImageBackground, StyleSheet} from 'react-native'
-import PushNotification from 'react-native-push-notification'
 import {useDispatch, useSelector} from 'react-redux'
 
 import {constants} from '../../config/constants'
 
-import {handleSaveCurrentItem, handleSaveDailyItem} from '../../config/functions'
+import {handleSaveCurrentItem, handleSaveDailyItem, pushNewNotification} from '../../config/functions'
 
 import SaveButton from '../../Components/SaveButton'
 import DateViewCurrent from './DateViewCurrent'
@@ -16,6 +15,7 @@ import noteImage from '../../assets/img/note.png'
 import DateViewDaily from './DateViewDaily'
 import {todoListAddDailyItem} from '../../store/Todo/actions'
 import TimerView from './TimerView'
+import moment from 'moment'
 
 function AddScreen({route, navigation}) {
 
@@ -27,8 +27,9 @@ function AddScreen({route, navigation}) {
   const [description, setDescription] = React.useState('')
   const [date, setDate] = React.useState(new Date())
 
-  const [timer, setTimer] = React.useState({})
-  const [changedTimer, setChangedTimer] = React.useState(false)
+  const [changedDate, setChangedDate] = React.useState(false)
+  const [hours, setHours] = React.useState('')
+  const [minutes, setMinutes] = React.useState('')
 
   // add title from constants
   React.useEffect(() => {
@@ -52,7 +53,7 @@ function AddScreen({route, navigation}) {
         headerRight: () => undefined,
       })
     }
-  }, [name, description, date])
+  }, [name, description, date, hours, minutes])
 
   const saveItem = () => {
     let temp = description.split('\n')
@@ -61,7 +62,17 @@ function AddScreen({route, navigation}) {
     }
 
     if (listType === 'current') {
-      dispatch(handleSaveCurrentItem(name.length === 0 ? temp[0] : name, date, description))
+
+      if (changedDate && (hours !== '' || minutes !== '')){
+        let h = hours || '0'
+        let m = minutes || '0'
+        let res = parseInt(h) * 60 + parseInt(m)
+        pushNewNotification(name.length === 0 ? temp[0] : name, moment(date).subtract(res, 'minutes'))
+      }
+
+      dispatch(handleSaveCurrentItem(name.length === 0 ? temp[0] : name, date, description, changedDate))
+
+
     } else if (listType === 'daily') {
       const notificationIds = dispatch(handleSaveDailyItem(name.length === 0 ? temp[0] : name, date))
 
@@ -99,22 +110,25 @@ function AddScreen({route, navigation}) {
               clearTextOnFocus={true}
             />
           </View>
-          {/* Date field to know when send notification */}
-          {/*<View>*/}
-          {/*  {listType === 'current' && <TimerView setChangedTimer={setChangedTimer} setTimer={setTimer} />}*/}
 
-          {/*  {listType === 'current' && <DateViewCurrent date={date} setDate={setDate}/>}*/}
-          {/*  {listType === 'daily' && <DateViewDaily date={date} setDate={setDate}/>}*/}
-          {/*</View>*/}
-
-          {listType === 'current' && <DateViewCurrent date={date} setDate={setDate}/>}
-          {listType === 'daily' && <DateViewDaily date={date} setDate={setDate}/>}
+          {/* Different timers and date inputs */}
+          {listType === 'current' ?
+            <View>
+              <TimerView
+                hours={hours} setHours={setHours}
+                minutes={minutes} setMinutes={setMinutes}
+              />
+              <DateViewCurrent date={date} setDate={setDate} setChanged={setChangedDate} />
+            </View>
+            :
+            <DateViewDaily date={date} setDate={setDate}/>
+          }
 
         </View>
         {/* description of the task */}
         <Textarea
           value={description}
-          placeholder={'your description'}
+          placeholder={constants.placeholder.inputTextarea}
           onChange={message => setDescription(message.nativeEvent.text)}
         />
       </ImageBackground>
@@ -128,9 +142,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   inputContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
+    padding: 10
   },
   header: {
     flexDirection: 'row',

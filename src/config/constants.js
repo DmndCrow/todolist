@@ -2,25 +2,25 @@
 // constants that are used and can be easily changed
 export const constants = {
   title: {
-    current: 'Current list',
-    completed: 'Completed list',
-    daily: 'Daily list',
-    newItem: 'new Item',
-    itemDetails: 'item details',
+    current: 'Ескертпелер',
+    completed: 'Орындалды',
+    daily: 'Күнделікті',
+    newItem: 'Жаңа ескертпе',
+    itemDetails: 'Ескертпе мәліметі',
   },
   placeholder: {
-    inputName: 'input name',
-    inputTextarea: 'input textarea',
+    inputName: 'Ескертпе аты',
+    inputTextarea: 'Ескертпе сипаттамасы',
   },
   dictionary: {
     create: {
-      todo: 'todo create',
-      daily: 'daily create'
+      todo: 'Ескертпе құру',
+      daily: 'Күнделікті ескертпе құру'
     },
     delete: {
-      todo: 'todo delete',
-      daily: 'daily delete'
+      todo: 'Ескертпе жою',
+      daily: 'Күнделікті ескертпе жою'
     },
-    complete: 'todo complete'
+    complete: 'Ескертпе орындау'
   }
 }

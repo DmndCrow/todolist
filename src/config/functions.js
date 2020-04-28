@@ -17,7 +17,7 @@ export const sendNotification = (dispatch, message, date) => {
   PushNotification.localNotificationSchedule({
     id: notificationId,
     message: message,
-    date: date
+    date: date,
   })
 
   // move task from current to completed list at the given date
@@ -25,25 +25,36 @@ export const sendNotification = (dispatch, message, date) => {
     console.log('got at ' + new Date() + ' with title ' + message)
     dispatch(todoListChangeCurrentCompletedByTitle({
       title: message,
-      date: date
+      date: date,
     }))
   }, (date.getTime() - new Date().getTime()))
 
   return {
     notificationId: notificationId,
-    timeoutId: timeoutId
+    timeoutId: timeoutId,
   }
 }
 
 // remove notification and cancel move to completed list
 export const removeNotication = (item) => {
-  console.log(item)
+  if (item.notificationId) {
+    try {
+      PushNotification.cancelLocalNotifications({
+        id: item.notificationId,
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-  PushNotification.cancelLocalNotifications({
-    id: item.notificationId
-  })
+  if (item.timeoutId) {
+    try {
+      BackgroundTimer.clearTimeout(item.timeoutId)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-  if (item.timeoutId) BackgroundTimer.clearTimeout(item.timeoutId)
 }
 
 // get index and list type, to which opened task belongs
@@ -63,10 +74,13 @@ export const getType = (data, item) => {
   if (dailyIndex !== -1) return {type: 'daily', index: dailyIndex}
 }
 
-export const handleSaveCurrentItem = (name, date, description) => {
+export const handleSaveCurrentItem = (name, date, description, changedDate) => {
   return (dispatch) => {
     // send notification at the given time
-    const notificationIds = sendNotification(dispatch, name, date)
+    let notificationIds = {
+      notificationId: null, timeoutId: null,
+    }
+    if (changedDate) notificationIds = sendNotification(dispatch, name, date)
 
     // add item to the store
     dispatch(todoListAddItem({
@@ -74,7 +88,7 @@ export const handleSaveCurrentItem = (name, date, description) => {
       description: description,
       date: date,
       notificationId: notificationIds.notificationId,
-      timeoutId: notificationIds.timeoutId
+      timeoutId: notificationIds.timeoutId,
     }))
   }
 }
@@ -88,23 +102,23 @@ export const handleSaveDailyItem = (message, date) => {
     PushNotification.localNotificationSchedule({
       id: notificationId,
       message: message,
-      repeatType: "time",
+      repeatType: 'time',
       repeatTime: 24 * 60 * 60 * 1000,
-      date: new Date(date.getTime() + 24 * 60 * 60 * 1000)
+      date: new Date(date.getTime() + 24 * 60 * 60 * 1000),
     })
 
     return {
       notificationId: notificationId,
-      timeoutId: null
+      timeoutId: null,
     }
   }
 }
 
-export const pushNewNotification = (message) => {
-  console.log(message)
+export const pushNewNotification = (message, date = null) => {
+  console.log(message, date ? new Date(date) : new Date())
 
   PushNotification.localNotificationSchedule({
     message: message,
-    date: new Date()
+    date: date ? new Date(date) : new Date(),
   })
 }

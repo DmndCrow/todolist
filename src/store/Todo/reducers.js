@@ -276,9 +276,9 @@ export const todoReducer = (state = initialState, action) => {
     // reset all items
     case TODO_LIST_RESET: {
 
-      // for (const item in state.current){
-      //   removeNotication(item)
-      // }
+      for (const item in state.current){
+        removeNotication(item)
+      }
 
       return initialState
     }
